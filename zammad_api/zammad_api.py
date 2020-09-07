@@ -68,16 +68,16 @@ class ZammadApi:
         self.api_key = api_key
         self.json_data = json.dumps(json_data)
         self.obj_id = str(obj_id)
-        self.api_endpoint = self.target + self.api_endpoint
+        # self.api_endpoint = self.target + self.api_endpoint
         if filter_string:
             self.filter_string = str(filter_string)
         else:
             self.filter_string = None
         
-        # if self.obj_id:
-        #     self.api_endpoint = self.target + self.api_endpoint + '/{' + str(self.obj_id) + '}'
-        # else:
-        #     self.api_endpoint = self.target + self.api_endpoint
+        if self.obj_id:
+            self.api_endpoint = self.target + self.api_endpoint + '/' + str(self.obj_id)
+        else:
+            self.api_endpoint = self.target + self.api_endpoint
     
     # Disallow direct instantiation of this parent class
     # TODO This isn't working for some reason....
@@ -276,6 +276,8 @@ class Overview(ZammadApi):
 
     def __init__(self, target, api_key, filter_string=None, obj_id=None, json_data=None):
         super().__init__(target, api_key, filter_string, obj_id, json_data)
+    
+
 
 
 class Role(ZammadApi):
@@ -289,11 +291,17 @@ class Role(ZammadApi):
 
 class Ticket(ZammadApi):
 
-    api_endpoint = ''
+    api_endpoint = 'tickets'
     description = 'ticket'
 
     def __init__(self, target, api_key, filter_string=None, obj_id=None, json_data=None):
         super().__init__(target, api_key, filter_string, obj_id, json_data)
+    
+    def get(self):
+        self.ticket = self.action('GET')
+        if str(self.ticket['id']) == self.obj_id:
+            return self.ticket
+        return {'error': f'{self.description} with obj_id {self.obj_id} not found'}
 
 
 class Trigger(ZammadApi):
@@ -312,6 +320,12 @@ class User(ZammadApi):
 
     def __init__(self, target, api_key, filter_string=None, obj_id=None, json_data=None):
         super().__init__(target, api_key, filter_string, obj_id, json_data)
+
+    def get(self):
+        self.user = self.action('GET')
+        if str(self.user['id']) == self.obj_id:
+            return self.user
+        return {'error': f'{self.description} with obj_id {self.obj_id} not found'}
 
     def list_obj(self):
         if self.filter_string:
