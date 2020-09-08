@@ -9,6 +9,7 @@ from zammad_api.zammad_api import Organization
 from zammad_api.zammad_api import Overview
 from zammad_api.zammad_api import Role
 from zammad_api.zammad_api import Ticket
+from zammad_api.zammad_api import TicketTags
 from zammad_api.zammad_api import Trigger
 from zammad_api.zammad_api import User
 from zammad_api.zammad_api import Collection
